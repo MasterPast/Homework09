@@ -2,16 +2,14 @@ from sys import exit
 from collections import deque
 
 def f_add(cmnd):
-    if not cmnd:
-        print('NO')
-    else:
-        f2_save_contact()
-        print(f'Adding the: {cmnd[0]} phone: {cmnd[1]}')    
-
+    voc_contacts['name'] = cmnd[0]
+    voc_contacts['phone'] = cmnd[1]
+    
 
 def f_change(cmnd):
-    print('wtf change')
-
+    voc_contacts['name'] = cmnd[0]
+    voc_contacts['phone'] = cmnd[1]
+    
 
 def f_exit(cmnd):
     print('Good bye!')
@@ -40,9 +38,11 @@ def f_unknown(cmnd):
     print('Please, repeat... Don`t understand you.(')
 
 
-def f2_save_contact():
+def f2_input_error():
     pass
 
+def f2_save_contact(cmnd):
+    pass    
 
 voc_contacts = {}
 voc_cmnd = {'hello' : f_hello,
@@ -57,23 +57,13 @@ voc_cmnd = {'hello' : f_hello,
 
 input_command = ''
 
-while True:
-    cmnd = []
-    input_command = input('What can I do for you? >>> ')
-    input_command = input_command.lower()
-    
-    res, cmnd = f_talking(input_command)
-    print(res)
-    # try:
-    res(cmnd)
-    # except KeyError:
-    #     res = f_unknown(cmnd)
-    #     res()
-
-    # if res in voc_cmnd:
-    #     res(cmnd)
-    # else:
-    #     res = f_unknown(cmnd)
-    #     # res()
-
+def main():
+    while True:
+        cmnd = []
+        input_command = input('What can I do for you? >>> ')
+        input_command = input_command.lower()
+        
+        res, cmnd = f_talking(input_command)
+        print(res)
+        res(cmnd)
 
