@@ -41,9 +41,9 @@ def f2_print(fn):
 
 
 q = {
-    '1dsf': 'qwe',
-    'sd2': '23ew',
-    '3d': 'cxvc'
+    'wer': 'qwe',
+    'war god': '23ew',
+    'sqwer': 'cxvc'
 }
 list_voc_contacts = []
 w = ['q', 'wer', 'cxvxc', 'qweqw']
@@ -51,4 +51,6 @@ n = ['sd2', '345678']
 e = deque(w)
 read_file()
 msg = 'dfsfsdf'
-f2_print(print(msg))
+# f2_print(print(msg))
+if 'war god' in q:
+    print('yep')

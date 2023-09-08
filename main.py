@@ -7,7 +7,11 @@ def f2_input_error(fn):
             # print(cmnd)
             msg = fn(cmnd)
             # print(msg)
+        except KeyError:
+            msg = 'WTF'
         except IndexError:
+            print('Give me name and phone please...')
+        except UnboundLocalError:
             print('Give me name and phone please...')
         return msg
     return inner
@@ -65,7 +69,7 @@ def f_phone(cmnd):
 
 @f2_print
 def f_show_all(cmnd):
-    msg = '\nI found next information in your contacts: \n\'
+    msg = '\nI found next information in your contacts: \n'
     msg += (('-' * 46) + '\n')
     for contacts in list_voc_contacts:
         cont_string = '| {a1:{align}{width}} | {a2:{width}}|\n'.format(
@@ -75,6 +79,8 @@ def f_show_all(cmnd):
     return msg
 
 
+@f2_print
+@f2_input_error
 def f_talking(cmnd):
     cmnd = cmnd.split()
     cmnd = deque(cmnd)
@@ -88,9 +94,10 @@ def f_talking(cmnd):
     return voc_cmnd[voc_func], cmnd
 
 
+@f2_print
 def f_unknown(cmnd):
-    print('Please, repeat... Don`t understand you.(')
-
+    msg = '\nPlease, repeat... Don`t understand you.('
+    return msg
 
 def read_file():
     with open('contacts.txt', 'r') as fr:
@@ -102,7 +109,7 @@ def read_file():
             voc_contacts.update(phone = s[1])
             voc1 = voc_contacts.copy()
             list_voc_contacts.append(voc1)
-        print(list_voc_contacts)
+        # print(list_voc_contacts)
 
 
 list_voc_contacts = []
