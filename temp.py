@@ -17,7 +17,8 @@ def pr1():
 def pr2():
     print(2)
 
-def read_file():
+
+def read_file():    
     with open('contacts.txt', 'r') as fr:
         voc_contacts = {}
         frc = fr.readlines()
@@ -27,6 +28,7 @@ def read_file():
             voc_contacts.update(phone=s[1])
             voc1 = voc_contacts.copy()
             list_voc_contacts.append(voc1)
+
 
 def f2_print(fn):
     def inner(cmnd):
@@ -45,6 +47,16 @@ q = {'hello' : 'f_hello',
             'exit' : 'f_exit'
 }
 
+q2 = {'hello' : '2121f_hello',
+            'add' : '121f_add',
+            'change' : '1212f_change',
+            'phone' : '121f_phone',
+            'show all' : '121f_show_all',
+            'good bye' : '1212f_exit',
+            'close' : '1212f_exit',
+            'exit' : '1212f_exit'
+}
+
 list_voc_contacts = []
 w = ['q', 'wer', 'cxvxc', 'qweqw']
 n = ['sd2', '345678']
@@ -52,8 +64,5 @@ e = deque(w)
 read_file()
 msg = 'show all'
 # f2_print(print(msg))
-for dics in q:
-    pattern = re.compile(dics + ' ')
-    txt = 'show all addd master 9879437593'
-    s = pattern.match(txt)
-    print(s)
+for z1,z2 in zip(q, q2.items()):
+    print(z1 + ' ' + z2[1])
