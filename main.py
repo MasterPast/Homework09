@@ -21,16 +21,6 @@ def input_error(fn):
     return inner
 
 
-def qprint(fn):
-    def inner(cmnd):
-
-        msg = fn(cmnd)
-        print(msg)
-
-        return
-    return inner
-
-
 @input_error
 def add(cmnd):
 
