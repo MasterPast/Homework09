@@ -1,3 +1,4 @@
+import re
 from sys import exit
 from collections import deque
 
@@ -8,11 +9,14 @@ def f2_input_error(fn):
             msg = fn(cmnd)
             # print(msg)
         except KeyError:
-            msg = 'WTF'
+            msg = '\nSomething not good...((( Please, check HELP with "help" command.'
         except IndexError:
-            print('Give me name and phone please...')
+            msg = '\nSomething not good...((( Please, check HELP with "help" command.'
         except UnboundLocalError:
-            print('Give me name and phone please...')
+            msg = '\nSomething not good...((( Please, check HELP with "help" command.'
+        except ValueError:
+            msg = '\nSomething not good...((( Please, check HELP with "help" command.'
+    
         return msg
     return inner
 
@@ -36,7 +40,7 @@ def f_add(cmnd):
     voc_contacts['name'] = cmnd[0]
     voc_contacts['phone'] = cmnd[1]
     list_voc_contacts.append(voc_contacts)
-    msg = f'\nIt was added: {voc_contacts["name"]} with phone number: {voc_contacts["phone"]} in your contacts.\n'
+    msg = f'\nIt was added: {voc_contacts["name"]} with phone number: {voc_contacts["phone"]} in your contacts.'
     return msg
 
 @f2_print
@@ -44,32 +48,34 @@ def f_add(cmnd):
 def f_change(cmnd):
     for voc in filter(lambda voc: voc['name']==cmnd[0], list_voc_contacts):
         voc.update([('phone', cmnd[1])])
-        msg = f'\nIt was changed the phone number of: {voc["name"]} on: {voc["phone"]}.\n'
+        msg = f'\nIt was changed the phone number of: {voc["name"]} on: {voc["phone"]}.'
     return msg
 
 
 def f_exit(cmnd):
-    msg = '\nGood bye!'
+    msg = '\nGood bye! Have a nice day!'
     f2_print(print(msg))
     exit()
 
 
 @f2_print
 def f_hello (cmnd):
-    msg = '\nHow can I help you?\n'
+    msg = '\nHello! How can I help you?'
     return msg
 
 
 @f2_print
+@f2_input_error
 def f_phone(cmnd):
     for voc in filter(lambda voc: voc['name']==cmnd[0], list_voc_contacts):
-        msg = f'\nFor contact: {voc.get("name")} I found this phone number: {voc["phone"]}.\n'
+        msg = f'\nFor contact: {voc.get("name")} I found this phone number: {voc["phone"]}.'
     return msg
 
 
 @f2_print
+@f2_input_error
 def f_show_all(cmnd):
-    msg = '\nI found next information in your contacts: \n'
+    msg = '\nI found next information in your contacts: '
     msg += (('-' * 46) + '\n')
     for contacts in list_voc_contacts:
         cont_string = '| {a1:{align}{width}} | {a2:{width}}|\n'.format(
@@ -79,18 +85,28 @@ def f_show_all(cmnd):
     return msg
 
 
-@f2_print
-@f2_input_error
+# @f2_input_error
 def f_talking(cmnd):
-    cmnd = cmnd.split()
-    cmnd = deque(cmnd)
-    if cmnd[0] == 'good' or cmnd[0] == 'show':
-        cmnd[0] += ' ' + cmnd[1]    
-        voc_func = cmnd.popleft()
-        cmnd.popleft()
-    else:
-        voc_func = cmnd.popleft()
-    # print(voc_func)
+    for pair in voc_cmnd:
+        patt = re.compile(pair + ' ')
+        s = patt.match(cmnd + ' ')
+        # print(type(cmnd))
+        if s != None:
+            # print('yep')
+            cmnd = cmnd.split()
+            cmnd = deque(cmnd)
+            if cmnd[0] == 'good' or cmnd[0] == 'show':
+                cmnd[0] += ' ' + cmnd[1]    
+                voc_func = cmnd.popleft()
+                cmnd.popleft()
+            else:
+                voc_func = cmnd.popleft()
+            # print(voc_func)
+            break
+    
+    if s == None:
+        voc_func = 'unknown'
+            
     return voc_cmnd[voc_func], cmnd
 
 
@@ -121,21 +137,24 @@ voc_cmnd = {'hello' : f_hello,
             'show all' : f_show_all,
             'good bye' : f_exit,
             'close' : f_exit,
-            'exit' : f_exit
+            'exit' : f_exit,
+            'unknown' : f_unknown
 }
 
 input_command = ''
 
-
 def main():
     read_file()
     while True:
-        cmnd = []       
+        # cmnd = []       
         input_command = input('\nWhat can I do for you? >>> ')
         input_command = input_command.lower()
         # print(input_command)
         res, cmnd = f_talking(input_command)
-        # print(res)
+        # print(1)
         res(cmnd)
+            
+        # print(res)
+        
 
 main()

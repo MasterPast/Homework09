@@ -1,5 +1,5 @@
 from collections import deque
-
+import re
 
 def deco(fn):
     def inner():
@@ -9,16 +9,13 @@ def deco(fn):
         return z
     return inner
 
-
 @deco
 def pr1():
     print(1)
 
-
 @deco
 def pr2():
     print(2)
-
 
 def read_file():
     with open('contacts.txt', 'r') as fr:
@@ -31,7 +28,6 @@ def read_file():
             voc1 = voc_contacts.copy()
             list_voc_contacts.append(voc1)
 
-
 def f2_print(fn):
     def inner(cmnd):
         msg = fn(cmnd)
@@ -39,18 +35,25 @@ def f2_print(fn):
         return
     return inner
 
-
-q = {
-    'wer': 'qwe',
-    'war god': '23ew',
-    'sqwer': 'cxvc'
+q = {'hello' : 'f_hello',
+            'add' : 'f_add',
+            'change' : 'f_change',
+            'phone' : 'f_phone',
+            'show all' : 'f_show_all',
+            'good bye' : 'f_exit',
+            'close' : 'f_exit',
+            'exit' : 'f_exit'
 }
+
 list_voc_contacts = []
 w = ['q', 'wer', 'cxvxc', 'qweqw']
 n = ['sd2', '345678']
 e = deque(w)
 read_file()
-msg = 'dfsfsdf'
+msg = 'show all'
 # f2_print(print(msg))
-if 'war god' in q:
-    print('yep')
+for dics in q:
+    pattern = re.compile(dics + ' ')
+    txt = 'show all addd master 9879437593'
+    s = pattern.match(txt)
+    print(s)
