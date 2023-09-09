@@ -3,7 +3,7 @@ from sys import exit
 from collections import deque
 
 
-def f2_input_error(fn):
+def input_error(fn):
     def inner(cmnd):
 
         try:
@@ -21,7 +21,7 @@ def f2_input_error(fn):
     return inner
 
 
-def f2_print(fn):
+def qprint(fn):
     def inner(cmnd):
 
         msg = fn(cmnd)
@@ -31,9 +31,8 @@ def f2_print(fn):
     return inner
 
 
-@f2_print
-@f2_input_error
-def f_add(cmnd):
+@input_error
+def add(cmnd):
 
     voc_contacts = {}
     voc_contacts['name'] = cmnd[0]
@@ -44,9 +43,8 @@ def f_add(cmnd):
     return msg
 
 
-@f2_print
-@f2_input_error
-def f_change(cmnd):
+@input_error
+def change(cmnd):
     for voc in filter(lambda voc: voc['name'] == cmnd[0], list_voc_contacts):
 
         voc.update([('phone', cmnd[1])])
@@ -55,15 +53,13 @@ def f_change(cmnd):
     return msg
 
 
-def f_exit(cmnd):
+def exit_bot(cmnd):
 
     msg = '\nGood bye! Have a nice day!'
-    f2_print(print(msg))
-    exit()
+    return msg
 
 
-@f2_print
-def f_help(cmnd):
+def help(cmnd):
 
     msg = '\nHelp for you:\n\n'
     for d1 in voc_help.items():
@@ -72,27 +68,24 @@ def f_help(cmnd):
     return msg
 
 
-@f2_print
-def f_hello(cmnd):
+def hello(cmnd):
 
     msg = '\nHello! How can I help you?'
     return msg
 
 
-@f2_print
-@f2_input_error
-def f_phone(cmnd):
-    
+@input_error
+def phone(cmnd):
+
     for voc in filter(lambda voc: voc['name'] == cmnd[0], list_voc_contacts):
         msg = f'\nFor contact: {voc.get("name")} I found this phone number: {voc["phone"]}.'
-    
+
     return msg
 
 
-@f2_print
-@f2_input_error
-def f_show_all(cmnd):
-    
+@input_error
+def show_all(cmnd):
+
     msg = '\nI found next information in your contacts:\n'
     msg += (('-' * 46) + '\n')
     for contacts in list_voc_contacts:
@@ -100,11 +93,11 @@ def f_show_all(cmnd):
             a1=contacts['name'], a2=contacts['phone'], align='>', width=20)
         msg += cont_string
     msg += (('-' * 46) + '\n')
-    
-    return msg
-    
 
-def f_talking(cmnd):
+    return msg
+
+
+def talking(cmnd):
 
     for pair in voc_cmnd:
         patt = re.compile(pair + ' ')
@@ -125,9 +118,8 @@ def f_talking(cmnd):
     return voc_cmnd[voc_func], cmnd
 
 
-@f2_print
-def f_unknown(cmnd):
-    
+def unknown(cmnd):
+
     msg = '\nPlease, repeat... Don`t understand you.((( You can use HELP command.'
     return msg
 
@@ -135,16 +127,16 @@ def f_unknown(cmnd):
 input_command = ''
 list_voc_contacts = []
 voc_cmnd = {
-    'add': f_add,
-    'change': f_change,
-    'close': f_exit,
-    'exit': f_exit,
-    'good bye': f_exit,
-    'hello': f_hello,
-    'help': f_help,
-    'phone': f_phone,
-    'show all': f_show_all,
-    'unknown': f_unknown
+    'add': add,
+    'change': change,
+    'close': exit_bot,
+    'exit': exit_bot,
+    'good bye': exit_bot,
+    'hello': hello,
+    'help': help,
+    'phone': phone,
+    'show all': show_all,
+    'unknown': unknown
 }
 
 voc_help = {'add': 'add contact phone : Add contact and phone number in phonebook.\n',
@@ -158,12 +150,16 @@ voc_help = {'add': 'add contact phone : Add contact and phone number in phoneboo
             'show all': 'show all : Display your phonebook.'
             }
 
+
 def main():
     while True:
         input_command = input('\nWhat can I do for you? >>> ')
         input_command = input_command.lower()
-        res, cmnd = f_talking(input_command)
-        res(cmnd)
+        res, cmnd = talking(input_command)
+        msg = res(cmnd)
+        print(msg)
+        if msg == '\nGood bye! Have a nice day!':
+            exit()
 
 
 if __name__ == '__main__':
