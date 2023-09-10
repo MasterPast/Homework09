@@ -63,6 +63,7 @@ n = ['sd2', '345678']
 e = deque(w)
 read_file()
 msg = 'show all'
-# f2_print(print(msg))
-for z1,z2 in zip(q, q2.items()):
-    print(z1 + ' ' + z2[1])
+cmnd = input('>>> ')
+patt = re.compile('(?i)hello' + ' ')
+s = patt.match(cmnd + ' ')
+print(s)        

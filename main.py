@@ -8,14 +8,14 @@ def input_error(fn):
 
         try:
             msg = fn(cmnd)
-        except KeyError:
-            msg = '\nSomething not good...((( Please, check HELP with "help" command.'
+        # except KeyError:
+        #     msg = '\nSomething not good...((( Please, check HELP with "help" command.'
         except IndexError:
-            msg = '\nSomething not good...((( Please, check HELP with "help" command.'
+            msg = '\nWaiting for contact`s name and number phone.'
         except UnboundLocalError:
-            msg = '\nSomething not good...((( Please, check HELP with "help" command.'
-        except ValueError:
-            msg = '\nSomething not good...((( Please, check HELP with "help" command.'
+            msg = '\nCan`t find this contact in your pnonebook. Use "show all" to check.'
+        # except ValueError:
+        #     msg = '\nSomething not good...((( Please, check HELP with "help" command.'
 
         return msg
     return inner
@@ -90,17 +90,18 @@ def show_all(cmnd):
 def talking(cmnd):
 
     for pair in voc_cmnd:
-        patt = re.compile(pair + ' ')
+
+        patt = re.compile('(?i)' + pair + ' ')
         s = patt.match(cmnd + ' ')
         if s != None:
             cmnd = cmnd.split()
             cmnd = deque(cmnd)
             if cmnd[0] == 'good' or cmnd[0] == 'show':
                 cmnd[0] += ' ' + cmnd[1]
-                voc_func = cmnd.popleft()
+                voc_func = cmnd.popleft().lower()
                 cmnd.popleft()
             else:
-                voc_func = cmnd.popleft()
+                voc_func = cmnd.popleft().lower()
             break
     if s == None:
         voc_func = 'unknown'
@@ -144,7 +145,6 @@ voc_help = {'add': 'add contact phone : Add contact and phone number in phoneboo
 def main():
     while True:
         input_command = input('\nWhat can I do for you? >>> ')
-        input_command = input_command.lower()
         res, cmnd = talking(input_command)
         msg = res(cmnd)
         print(msg)
